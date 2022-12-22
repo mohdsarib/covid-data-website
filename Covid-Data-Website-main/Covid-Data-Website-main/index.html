@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="heading">
+      <h1>Covid Tracker</h1>
+    </div>
+    <div class="header">
+      <div class="date">Updated on : <span id="date"></span></div>
+      <div id="btn">Refresh</div>
+    </div>
+    <div class="container">
+      <div class="world">
+        <h2>World</h2>
+        <div class="cases">
+          <h3>Total Cases</h3>
+          <h5 id="totalcasesworld" class="data"></h5>
+        </div>
+        <div class="death">
+          <h3>Total Deaths</h3>
+          <h5 id="totaldeathsworld" class="data"></h5>
+        </div>
+        <div class="cases">
+          <h3>Total Cases Today</h3>
+          <h5 id="todaycasesworld" class="data"></h5>
+        </div>
+        <div class="death">
+          <h3>Total Deaths Today</h3>
+          <h5 id="todaydeathsworld" class="data"></h5>
+        </div>
+      </div>
+
+      <div class="india">
+        <h2>India</h2>
+        <div class="cases">
+          <h3>Total Cases</h3>
+          <h5 id="totalcasesindia" class="data"></h5>
+        </div>
+        <div class="death">
+          <h3>Total Deaths</h3>
+          <h5 id="totaldeathsindia" class="data"></h5>
+        </div>
+        <div class="cases">
+          <h3>Total Cases Today</h3>
+          <h5 id="todaycasesindia" class="data"></h5>
+        </div>
+        <div class="death">
+          <h3>Total Deaths Today</h3>
+          <h5 id="todaydeathsindia" class="data"></h5>
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      const totalcasesworld = document.getElementById("totalcasesworld");
+      const totaldeathsworld = document.getElementById("totaldeathsworld");
+      const todaycasesworld = document.getElementById("todaycasesworld");
+      const todaydeathsworld = document.getElementById("todaydeathsworld");
+
+      const totalcasesindia = document.getElementById("totalcasesindia");
+      const totaldeathsindia = document.getElementById("totaldeathsindia");
+      const todaycasesindia = document.getElementById("todaycasesindia");
+      const todaydeathsindia = document.getElementById("todaydeathsindia");
+
+      const refreshBtn = document.getElementById("btn");
+      const date = document.getElementById("date");
+
+      $(document).ready(function () {
+        init();
+        refreshBtn.addEventListener("click", refresh);
+        function refresh() {
+          $(".data").empty();
+          $("#date").empty();
+          init();
+          refreshBtn.style.backgroundColor = "green";
+          refreshBtn.innerHTML = "Updated";
+          setTimeout(clear, 10000);
+
+          function clear() {
+            refreshBtn.style.backgroundColor = "tomato";
+            refreshBtn.innerHTML = "Refresh";
+          }
+        }
+
+        function init() {
+          var url = "https://api.covid19api.com/summary";
+          $.get(url, function (data) {
+            // India
+            todaycasesindia.append(data.Countries[76].NewConfirmed);
+            todaydeathsindia.append(data.Countries[76].NewDeaths);
+            totalcasesindia.append(data.Countries[76].TotalConfirmed);
+            totaldeathsindia.append(data.Countries[76].TotalDeaths);
+            // World
+            todaycasesworld.append(data.Global.NewConfirmed);
+            todaydeathsworld.append(data.Global.NewDeaths);
+            totalcasesworld.append(data.Global.TotalConfirmed);
+            totaldeathsworld.append(data.Global.TotalDeaths);
+            console.log(data);
+            var myDate = new Date(data.Date);
+            var noTime = new Date(
+              myDate.getFullYear(),
+              myDate.getMonth(),
+              myDate.getDate(),
+              myDate.getHours(),
+              myDate.getMinutes(),
+              myDate.getSeconds()
+            );
+            date.append(noTime);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
